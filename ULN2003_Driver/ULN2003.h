@@ -18,17 +18,21 @@ typedef struct {
     GPIO_TypeDef *IN3_port;
 	uint16_t IN3_pin;
     GPIO_TypeDef *IN4_port;
-	uint16_t IN4_pin;	
+	uint16_t IN4_pin;
+
+	volatile int32_t steps_remaining;
+	uint8_t current_step_index;
+	uint8_t direction;
 } ULN2003_Handle;
 
 
 // Initializes handle for the driver that holds  all hardware details (pwm channel, pin assignments).
-void ULN2003_Init(DRV8425_Handle *hdrv);
+void ULN2003_Init(ULN2003_Handle *hdrv);
 
 // Drive the motor a given number of steps with the direction indicated by the sign of param steps, at the given frequency. 
-uint8_t ULN2003_DriveSteps(DRV8425_Handle *hdrv, int32_t steps, uint32_t freq); 
+uint8_t ULN2003_DriveSteps(ULN2003_Handle *hdrv, int32_t steps, uint32_t freq); 
 
 // Stop motor regardless of steps remaining.
-uint8_t ULN2003_Stop(DRV8425_Handle *hdrv);
+uint8_t ULN2003_Stop(ULN2003_Handle *hdrv);
 
 // Those are the most important. After that is implemented and tested, consider adding more like sleep mode, microstepping modes, current limiting, and more.
