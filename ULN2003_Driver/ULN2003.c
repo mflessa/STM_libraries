@@ -94,8 +94,8 @@ uint8_t ULN2003_DriveSteps(ULN2003_Handle *hdrv, int32_t steps, uint32_t freq) {
     // formula: timclk / (psc + 1) = tick frequency
        // prescaler value
     uint32_t psc = hdrv->htim_step->Init.Prescaler;
-    uint32_t tim_clk = HAL_RCC_GetPCLK2Freq(); //ASSUME this is connected to APB2 bus, if on APB1 will need to update formula
-    uint32_t tick_freq = tim_clk / (psc+1); //how many ticks per second based on timer configuration
+    //uint32_t tim_clk = HAL_RCC_GetPCLK2Freq(); //ASSUME this is connected to APB2 bus, if on APB1 will need to update formula
+    uint32_t tick_freq = hdrv->tim_clk_freq / (psc+1); //how many ticks per second based on timer configuration
 
        // calculate arr (autoreload for interrupt)
        // -> we want arr to equal ticks/step (one interrupt every step)
