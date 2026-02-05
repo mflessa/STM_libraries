@@ -21,10 +21,28 @@ typedef struct {
 	uint16_t IN4_pin;
 
 	volatile int32_t steps_remaining;
-	uint8_t current_step_index;
+	uint8_t index;
 	uint8_t direction;
 } ULN2003_Handle;
 
+//error codes to be returned by the functions
+#define SUCCESS 0x00
+#define ENABLE_ALREADY_LOW_ERROR 0x01
+#define ABOVE_MAX_FREQ_ERROR 0x02
+#define BELOW_MIN_FREQ_ERROR 0x03
+
+// freq limits (depends on stepper motor being used)
+// NOTE: for max freq limit it is optimal to not
+// operate at max freq as more noise will be generated
+#define MAX_FREQ_LIMIT_HZ 500000
+#define MIN_FREQ_LIMIT_HZ 0
+
+// do not edit the pattern size 
+#define PATTERN_SIZE 4
+
+// defines the possible directions the motor can go 
+#define FORWARD 0
+#define BACKWARD 1
 
 // Initializes handle for the driver that holds  all hardware details (pwm channel, pin assignments).
 void ULN2003_Init(ULN2003_Handle *hdrv);
