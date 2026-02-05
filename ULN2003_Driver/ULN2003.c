@@ -9,24 +9,6 @@
 #include <stdio.h>
 #include <stdint.h>
 
-//error codes to be returned by the functions
-#define SUCCESS 0x00
-#define ENABLE_ALREADY_LOW_ERROR 0x01
-#define ABOVE_MAX_FREQ_ERROR 0x02
-#define BELOW_MIN_FREQ_ERROR 0x03
-
-// freq limits (depends on stepper motor being used)
-// NOTE: for max freq limit it is optimal to not
-// operate at max freq as more noise will be generated
-#define MAX_FREQ_LIMIT_HZ 500000
-#define MIN_FREQ_LIMIT_HZ 0
-
-#define PATTERN_SIZE 4
-
-#define FORWARD 0
-#define BACKWARD 1
-
-
 //GPIO initialization structs
 GPIO_InitTypeDef GPIO_IN1;
 GPIO_InitTypeDef GPIO_IN2;
@@ -34,13 +16,8 @@ GPIO_InitTypeDef GPIO_IN3;
 GPIO_InitTypeDef GPIO_IN4;
 
 //global ints
-static volatile int32_t steps_remaining = 0;
 static ULN2003_Handle *active_drv = NULL;
-volatile uint8_t step_flag;
-int8_t direction = FORWARD;
-
 static uint8_t pattern[PATTERN_SIZE] = {0x0C, 0x06, 0x03, 0x09};
-static uint8_t index = 0;
 
 // sets the HAL GPIO pin configurations for the stepper motor
 void ULN2003_Init(ULN2003_Handle *hdrv) {
@@ -99,7 +76,7 @@ uint8_t ULN2003_DriveSteps(ULN2003_Handle *hdrv, int32_t steps, uint32_t freq) {
 
        // calculate arr (autoreload for interrupt)
        // -> we want arr to equal ticks/step (one interrupt every step)
-    uint32_t arr = tick_freq / freq - 1;
+    uint32_t arr = (tick_freq / freq) - 1;
 
        //write that value into timer's auto reload register -> so the interrupt occurs every X ticks
     __HAL_TIM_SET_AUTORELOAD(hdrv->htim_step, arr);
