@@ -45,6 +45,10 @@ void ULN2003_Init(ULN2003_Handle *hdrv) {
     GPIO_IN4.Speed = GPIO_SPEED_FREQ_MEDIUM;
     HAL_GPIO_Init(hdrv->IN4_port, &GPIO_IN4);
 
+    steps_remaining = 0;
+	index = 0;
+	direction = FORWARD;
+
 }
 
 uint8_t ULN2003_DriveSteps(ULN2003_Handle *hdrv, int32_t steps, uint32_t freq) {
